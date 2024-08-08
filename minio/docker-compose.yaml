@@ -1,0 +1,17 @@
+version: '3.7'
+
+services:
+  minio:
+    image: quay.io/minio/minio
+    container_name: minio-datagang
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER-miniodatagang}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD-123456789}
+      - MINIO_API_PORT=${MINIO_API_PORT-9000}
+      - MINIO_CONSOLE_PORT=${MINIO_CONSOLE_PORT-9001}
+    volumes:
+      - ./data:/data
+    ports:
+      - ${MINIO_API_PORT-9000}:${MINIO_API_PORT-9000}
+      - ${MINIO_CONSOLE_PORT-9001}:${MINIO_CONSOLE_PORT-9001}
+    command: server /data --console-address ":${MINIO_CONSOLE_PORT-9001}"

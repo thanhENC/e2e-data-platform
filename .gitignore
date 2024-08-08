@@ -1,0 +1,3 @@
+minio/data
+minio/.env
+minio/credential_accesskey.json
