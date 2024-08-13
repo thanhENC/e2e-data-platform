@@ -1,4 +1,6 @@
 minio/data
 minio/credential_accesskey.json
+__pycache__/
+logs/
 
 .env

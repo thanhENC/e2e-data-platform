@@ -54,10 +54,10 @@ x-airflow-common:
   environment:
     &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: CeleryExecutor
-    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${AIRFLOW_POSTGRES_USER}:${AIRFLOW_POSTGRES_PASSWORD}@${AIRFLOW_POSTGRES_HOST}/${AIRFLOW_POSTGRES_DB:-airflow}
-    AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://${AIRFLOW_POSTGRES_USER}:${AIRFLOW_POSTGRES_PASSWORD}@${AIRFLOW_POSTGRES_HOST}/${AIRFLOW_POSTGRES_DB:-airflow}
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${AIRFLOW_POSTGRES_USER}:${AIRFLOW_POSTGRES_PASSWORD}@${AIRFLOW_POSTGRES_HOST}/${AIRFLOW_POSTGRES_DB:-airflow}?sslmode=require
+    AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://${AIRFLOW_POSTGRES_USER}:${AIRFLOW_POSTGRES_PASSWORD}@${AIRFLOW_POSTGRES_HOST}/${AIRFLOW_POSTGRES_DB:-airflow}?sslmode=require
     AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
-    AIRFLOW__CORE__FERNET_KEY: ''
+    AIRFLOW__CORE__FERNET_KEY: '${AIRFLOW__CORE__FERNET_KEY:-feretkey}'
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
     AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
     AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session'
@@ -90,8 +90,8 @@ x-airflow-common:
 #     image: postgres:13
 #     environment:
 #       POSTGRES_USER: ${AIRFLOW_POSTGRES_USER:-airflow}
-#       POSTGRES_PASSWORD: airflow
-#       POSTGRES_DB: airflow
+#       POSTGRES_PASSWORD: ${AIRFLOW_POSTGRES_PASSWORD:-airflow}
+#       POSTGRES_DB: ${AIRFLOW_POSTGRES_DB:-airflow}
 #     volumes:
 #       - postgres-db-volume:/var/lib/postgresql/data
 #     healthcheck:
@@ -285,5 +285,5 @@ services:
       airflow-init:
         condition: service_completed_successfully
 
-volumes:
-  postgres-db-volume:
+# volumes:
+#   postgres-db-volume:
