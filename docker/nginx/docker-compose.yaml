@@ -1,6 +1,22 @@
-version: '3.7'
+version: '3.8'
 
 services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./sites-enabled:/etc/nginx/sites-enabled
+      - ./sites-available:/etc/nginx/sites-available
+      - ./snippets:/etc/nginx/snippets
+    depends_on:
+      - minio
+    networks:
+      - datagang
+
   minio:
     image: quay.io/minio/minio
     container_name: minio-datagang
@@ -16,3 +32,5 @@ services:
       - ${MINIO_API_PORT:-9000}:${MINIO_API_PORT:-9000}
       - ${MINIO_CONSOLE_PORT:-9001}:${MINIO_CONSOLE_PORT:-9001}
     command: server /data --console-address ":${MINIO_CONSOLE_PORT:-9001}"
+    networks:
+      - datagang

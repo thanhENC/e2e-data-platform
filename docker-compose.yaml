@@ -1,0 +1,31 @@
+services:
+  nginx:
+    container_name: nginx
+    build:
+      context: ./nginx
+    env_file: .env
+    networks:
+      - ${NETWORK_NAME:-datagang_shared_network}
+    depends_on:
+      - minio
+      - mindsdb
+    command: /docker-entrypoint.sh
+
+  minio:
+    extends:
+      file: ./minio/docker-compose.yml
+      service: minio
+
+  lightdash:
+    extends:
+      file: ./services/docker-compose.yml
+      service: lightdash
+
+  trino:
+    extends:
+      file: ./services/docker-compose.yml
+      service: trino
+
+networks:
+  ${NETWORK_NAME:-datagang_shared_network}:
+    external: true
