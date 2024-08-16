@@ -2,5 +2,6 @@ minio/data
 minio/credential_accesskey.json
 __pycache__/
 logs/
+jaffle-data/
 
 .env
