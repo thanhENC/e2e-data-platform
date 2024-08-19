@@ -1,5 +1,5 @@
-minio/data
-minio/credential_accesskey.json
+docker/minio/data/
+docker/minio/credential_accesskey.json
 __pycache__/
 logs/
 jaffle-data/
