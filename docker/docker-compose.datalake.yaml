@@ -84,7 +84,7 @@ services:
 
   jupyterlab:
     container_name: datalake-jupyterlab
-    image: quay.io/jupyter/datascience-notebook:latest
+    image: quay.io/jupyter/pyspark-notebook:latest
     user: root
     # restart: always
     ports:
@@ -98,7 +98,6 @@ services:
       - NB_UID=1000
       - NB_GID=100
       - CHOWN_HOME=yes
-      - JAVA_HOME=/usr
     command: >
       bash -c "pip install -r /tmp/requirements.txt && start.sh jupyter lab"
     depends_on:
