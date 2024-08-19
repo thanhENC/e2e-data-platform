@@ -22,6 +22,7 @@ services:
     hostname: metastore_db
     ports:
       - "5433:5432" # Access via Thrift protocol
+    
     environment:
       POSTGRES_USER: ${META_POSTGRES_USER:-hive}
       POSTGRES_PASSWORD: ${META_POSTGRES_PASSWORD:-hive}
@@ -80,3 +81,27 @@ services:
       - ${MINIO_API_PORT:-9000}:${MINIO_API_PORT:-9000}
       - ${MINIO_CONSOLE_PORT:-9001}:${MINIO_CONSOLE_PORT:-9001}
     command: server /data --console-address ":${MINIO_CONSOLE_PORT:-9001}"
+
+  jupyterlab:
+    container_name: datalake-jupyterlab
+    image: quay.io/jupyter/datascience-notebook:latest
+    user: root
+    # restart: always
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./jupyterlab/work:/home/jupyternb
+      - ./jupyterlab/requirements.txt:/tmp/requirements.txt
+    environment:
+      - JUPYTER_TOKEN=datalakejupyter
+      - NB_USER=jupyternb
+      - NB_UID=1000
+      - NB_GID=100
+      - CHOWN_HOME=yes
+      - JAVA_HOME=/usr
+    command: >
+      bash -c "pip install -r /tmp/requirements.txt && start.sh jupyter lab"
+    depends_on:
+      - trino
+      - hive-metastore
+      - minio
