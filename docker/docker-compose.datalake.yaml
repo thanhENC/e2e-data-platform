@@ -43,8 +43,8 @@ services:
       HIVE_METASTORE_WAREHOUSE_DIR: s3://datalake/ # HDFS config, we don't need it
       HIVE_METASTORE_USERS_IN_ADMIN_ROLE: "admin" # We also don't need it
       S3_ENDPOINT: http://minio:${MINIO_API_PORT:-9000}
-      S3_ACCESS_KEY: ${MINIO_ROOT_USER:-miniodatagang}
-      S3_SECRET_KEY: ${MINIO_ROOT_PASSWORD:-123456789}
+      S3_ACCESS_KEY: ${MINIO_ROOT_USER:-minio_access_key}
+      S3_SECRET_KEY: ${MINIO_ROOT_PASSWORD:-minio_secret_key}
       S3_PATH_STYLE_ACCESS: "true"
       # Below arguments exist for no reasons, but
       # we can not live without it
@@ -68,16 +68,14 @@ services:
 
   minio:
     image: quay.io/minio/minio
-    container_name: minio-datagang
-    profiles:
-      - minio
-      - storage
+    container_name: datalake-minio
+    hostname: minio
     environment:
-      - MINIO_ROOT_USER=${MINIO_ROOT_USER:-miniodatagang}
-      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD:-123456789}
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER:-minio_access_key}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD:-minio_secret_key}
       # - MINIO_BROWSER_REDIRECT_URL=${MINIO_BROWSER_REDIRECT_URL:-https://minio-console.example.com}
     volumes:
-      - ./data:/data
+      - ./minio/data:/data
     ports:
       - ${MINIO_API_PORT:-9000}:${MINIO_API_PORT:-9000}
       - ${MINIO_CONSOLE_PORT:-9001}:${MINIO_CONSOLE_PORT:-9001}

@@ -6,6 +6,16 @@ NO_YEAR_SAMPLE = 1
 # 1. Generate data
 gen_data: clone_github init_gendata_env gen_jaffle_shop_data copy_jaffle_shop_data clean_jaffle_shop_data
 
+# 2. Docker compose datalake
+datalake_up:
+	cd docker; \
+	docker compose -f docker-compose.datalake.yaml up -d
+	docker ps
+
+datalake_down:
+	cd docker; \
+	docker compose -f docker-compose.datalake.yaml down
+
 # Generate data phase ========================================
 
 clone_github:
