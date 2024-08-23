@@ -1,0 +1,47 @@
+version: '3.7'
+
+services:
+  postgres:
+    image: postgres:16.2
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    networks:
+      - keycloak_network
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.3
+    command: start
+    environment:
+      KC_HOSTNAME: ${KC_HOSTNAME}
+      # KC_HOSTNAME_ADMIN: ${KC_HOSTNAME_ADMIN}
+      KC_PROXY_HEADERS: forwarded
+      KC_HOSTNAME_STRICT: true # true if you want to use https
+      KC_HTTP_ENABLED: true # enables the http listener
+      KC_HOSTNAME_STRICT_HTTPS: true
+      PROXY_ADDRESS_FORWARDING: true
+
+      KC_LOG_LEVEL: info
+      KC_METRIC_ENABLED: true
+      KC_HEALTH_ENABLED: true
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres/${POSTGRES_DB}
+      KC_DB_USERNAME: ${POSTGRES_USER}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - 8080:8080
+    restart: always
+    depends_on:
+      - postgres
+    networks:
+      - keycloak_network
+
+networks:
+  keycloak_network:
+    driver: bridge
