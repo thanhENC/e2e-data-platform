@@ -2,7 +2,7 @@
 
 # Build docker image
 build:
-	docker build . --tag extending_airflow:latest
+	docker build . --no-cache --tag extending_airflow:latest
 
 # docker compose up -d --no-deps --build airflow-webserver airflow-scheduler
 # Run docker compose
