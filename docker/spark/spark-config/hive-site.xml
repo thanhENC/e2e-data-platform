@@ -1,0 +1,41 @@
+<configuration>
+    <!-- <property>
+        <name>hive.metastore.uris</name>
+        <value>thrift://host.docker.internal:9083</value> <! Accesing trough localhost to woid docker compose adding _wba-netwrok in hostname >
+        <description>Thrift URI for the remote metastore. Used by metastore client to connect to remote metastore.</description>
+    </property> -->
+    <property>
+        <name>fs.defaultFS</name>
+        <value>s3a://adw14</value>
+    </property>
+    <property>
+        <name>fs.s3a.impl</name>
+        <value>org.apache.hadoop.fs.s3a.S3AFileSystem</value>
+    </property>
+    <property>
+        <name>fs.s3a.connection.ssl.enabled</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>fs.s3a.aws.credentials.provider</name>
+        <value>org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider</value>
+    </property>
+
+    <property>
+        <name>fs.s3a.access.key</name>
+        <value>minio_access_key</value>
+    </property>
+    <property>
+        <name>fs.s3a.secret.key</name>
+        <value>minio_secret_key</value>
+    </property>
+    <property>
+        <name>fs.s3a.endpoint</name>
+        <value>https://minio:9001</value>
+    </property>
+    <property>
+        <name>fs.s3a.path.style.access</name>
+        <value>true</value>
+    </property>
+
+</configuration>
