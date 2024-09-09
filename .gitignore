@@ -5,5 +5,5 @@ logs/
 jaffle-data/
 .vscode/
 .venv
-
+data/
 .env
