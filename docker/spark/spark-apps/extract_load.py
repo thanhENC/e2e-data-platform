@@ -7,7 +7,7 @@ def main():
     schema = 'person'
     table = 'businessentity'
     delta_path = f'Files/{schema}/{table}'
-    bucket_name = 'adw14'
+    bucket_name = 'delta'
     destination_path = f's3a://{bucket_name}/spark/bronze/postgres/{schema}/{table}'
 
     # Postgres

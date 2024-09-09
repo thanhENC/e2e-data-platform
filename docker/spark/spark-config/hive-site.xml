@@ -6,7 +6,7 @@
     </property> -->
     <property>
         <name>fs.defaultFS</name>
-        <value>s3a://adw14</value>
+        <value>s3a://delta</value>
     </property>
     <property>
         <name>fs.s3a.impl</name>
@@ -14,7 +14,7 @@
     </property>
     <property>
         <name>fs.s3a.connection.ssl.enabled</name>
-        <value>true</value>
+        <value>false</value>
     </property>
     <property>
         <name>fs.s3a.aws.credentials.provider</name>
@@ -31,7 +31,7 @@
     </property>
     <property>
         <name>fs.s3a.endpoint</name>
-        <value>https://minio:9001</value>
+        <value>http://minio:9000</value>
     </property>
     <property>
         <name>fs.s3a.path.style.access</name>
