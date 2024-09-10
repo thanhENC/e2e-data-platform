@@ -45,9 +45,9 @@ def main():
     df.write.format("delta").mode("overwrite").save(destination_path)
     df.show()
 
-    # df.write.format("delta").option("delta.columnMapping.mode", "name")\
-    #     .option("path", f'{delta_path}/test_table')\
-    #     .saveAsTable("wba.test_table")
+    df.write.format("delta").option("delta.columnMapping.mode", "name")\
+        .option("path", destination_path)\
+        .saveAsTable("delta.businessentity")
 
     # dt = DeltaTable.forName(spark, "wba.test_table")
 
