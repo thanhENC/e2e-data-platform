@@ -1,5 +1,9 @@
 # Makefile to manage dataplatfom docker images
 
+# VARIABLES
+# -----------------------------------------------------------------------------
+SPARK_APP_NAME=test_meta.py
+
 # Create docker network if not exists
 # -----------------------------------------------------------------------------
 .PHONY: create-network
@@ -11,7 +15,7 @@ create-network:
 # -----------------------------------------------------------------------------
 .PHONY: compose-up
 compose-up: create-network
-	@docker compose up -d
+	@docker compose --env-file .env up -d
 	@docker ps
 
 # compose up with 2 spark workers
@@ -40,7 +44,33 @@ compose-down:
 # -----------------------------------------------------------------------------
 .PHONY: spark-submit
 spark-submit:
-	@docker exec -it spark-master bash -c "cd /opt/spark-apps && spark-submit --master spark://spark-master:7077 extract_load.py"
+	@docker exec -it spark-master bash -c "cd /opt/spark-apps && spark-submit --master spark://spark-master:7077 $(SPARK_APP_NAME)"
+
+# Initialize adventureworks database
+.PHONY: init-db
+init-db:
+	@cd ../adw14 && chmod +x adw14data.sh && ./adw14data.sh
+	@cd ../docker
+
+# Clean temp data
+# -----------------------------------------------------------------------------
+.PHONY: clean
+clean: compose-down
+	@rm -r volume
+
+# Clean Adw14 data
+# -----------------------------------------------------------------------------
+.PHONY: clean-adw14
+clean-adw14:
+	@rm -r ../adw14/data
+	@rm -r ../adw14/AdventureWorks-oltp-install-script.zip
+
+# Clean all
+# -----------------------------------------------------------------------------
+.PHONY: clean-all
+clean-all: clean clean-adw14
+	@docker rmi $(docker images -q)
+	@docker system prune -f
 
 # Help
 # -----------------------------------------------------------------------------
@@ -55,5 +85,8 @@ help:
 	@echo "  compose-up-3      Compose up with 3 spark workers"
 	@echo "  compose-down      Compose down then remove network"
 	@echo "  spark-submit      Spark master submit"
+	@echo "  init-db           Initialize adventureworks database"
+	@echo "  clean             Clean temp data"
+	@echo "  clean-all         Clean all"
 	@echo "  help              Show this help message"
 	@echo ""

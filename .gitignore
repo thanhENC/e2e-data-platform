@@ -3,6 +3,7 @@ docker/minio/credential_accesskey.json
 __pycache__/
 logs/
 jaffle-data/
+docker/volume/
 .vscode/
 .venv
 data/
