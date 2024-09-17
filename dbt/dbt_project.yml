@@ -1,0 +1,53 @@
+name: 'theweekdays_adw'
+version: '1.0.0'
+config-version: 2
+
+profile: 'dbt_adw_profile'
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+target-path: "target"
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+# Configuring models
+# Full documentation: https://docs.getdbt.com/docs/configuring-models
+models:
+  theweekdays_adw:
+    +materialized: table
+
+    staging:
+      +materialized: view
+      +database: ADW14
+      +schema: staging
+      adw:
+        +tags: ['staging', 'adw']
+        sales:
+          +tags: ['sales']
+        person:
+          +tags: ['person']
+
+    intermediate:
+      +materialized: view
+      +database: ADW14
+      +schema: intermediate
+      sales:
+        +tags: ['intermediate']
+
+    marts:
+      +materialized: table
+      +database: ADW14
+      +schema: mart
+      sales:
+        +tags: ['marts']
+
+snapshots:
+  +database: ADW14
+  +schema: snapshot

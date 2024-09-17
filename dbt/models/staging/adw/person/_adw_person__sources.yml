@@ -1,0 +1,32 @@
+sources:
+  - name: source_adw_person
+    database: delta
+    schema: PERSON
+    description: Person Source
+    tables:
+      - name: abaddress
+        description: Address
+      - name: abaddresstype
+        description: Address Type
+      - name: abbusinessentity
+        description: Business Entity
+      - name: abbusinessentityaddress
+        description: Business Entity Address
+      - name: abbusinessentitycontact
+        description: Business Entity Contact
+      - name: abcontacttype
+        description: Contact Type
+      - name: abcountryregion
+        description: Country Region
+      - name: abemailaddress
+        description: Email Address
+      - name: abpassword
+        description: Password
+      - name: abperson
+        description: Person
+      - name: abpersonphone
+        description: Person Phone
+      - name: abphonenumbertype
+        description: Phone Number Type
+      - name: abstateprovince
+        description: State Province

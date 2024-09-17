@@ -1,0 +1,36 @@
+sources:
+  - name: source_adw_sales
+    database: ADW14
+    schema: SALES
+    description: Sales Source
+    tables:
+      - name: abcountryregioncurrency
+        description: Country Region Currency
+      - name: abcreditcard
+        description: Credit Card information
+      - name: abcurrency
+        description: Currency
+      - name: abcustomer
+        description: Customer
+      - name: abpersoncreditcard
+        description: Personal Credit Card
+      - name: absalesorderdetail
+        description: Sales Order Detail
+      - name: absalesorderheader
+        description: Sales Order Header
+      - name: absalesorderheadersalesreason
+        description: Sales Order Header Sales Reason
+      - name: absalesreason
+        description: Sales Reason
+      - name: absalestaxrate
+        description: Sales Tax Rate
+      - name: absalesterritory
+        description: Sales Territory
+      - name: absalesterritoryhistory
+        description: Sales Territory History
+      - name: abshoppingcartitem
+        description: Shopping Cart Item
+      - name: abspecialoffer
+        description: Special Offer
+      - name: abstore
+        description: Store
