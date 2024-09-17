@@ -3,8 +3,12 @@ docker/minio/credential_accesskey.json
 __pycache__/
 logs/
 jaffle-data/
-docker/volume/
+docker/volumes/
 .vscode/
 .venv
 data/
 .env
+
+dbt/target/
+dbt/dbt_packages/
+dbt/logs/
