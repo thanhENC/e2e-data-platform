@@ -235,10 +235,17 @@ services:
       # custom env vars
       SPARK_MASTER_PORT_EXPOSE: ${SPARK_MASTER_PORT_EXPOSE:-7077}
       SPARK_MASTER_WEBUI_PORT_EXPOSE: ${SPARK_MASTER_WEBUI_PORT_EXPOSE:-8081}
+      # oltp database
+      OLTP_DB_HOST: ${OLTP_DB_HOST:-oltp}
+      OLTP_DB_PORT: ${OLTP_DB_PORT:-5432}
+      OLTP_DB_NAME: ${OLTP_DB_NAME:-adventureworks}
+      OLTP_DB_USER: ${OLTP_DB_USER:-adventureworks}
+      OLTP_DB_PASSWORD: ${OLTP_DB_PASSWORD:-adventureworks}
     volumes:
       - ./spark/spark-apps:/opt/spark-apps
       - ./spark/spark-config/spark-defaults.conf:/opt/bitnami/spark/conf/spark-defaults.conf
       - ./spark/spark-config/hive-site.xml:/opt/bitnami/spark/conf/hive-site.xml
+      - ./spark/spark-config/core-site.xml:/opt/bitnami/spark/conf/core-site.xml
     ports:
       - "${SPARK_MASTER_WEBUI_PORT_EXPOSE}:8080"
       - "${SPARK_MASTER_PORT_EXPOSE}:7077"
