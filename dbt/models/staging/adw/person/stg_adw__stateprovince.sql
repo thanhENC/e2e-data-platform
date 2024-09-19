@@ -1,16 +1,16 @@
 with source as (
-      select * from {{ source('source_adw_person', 'abstateprovince') }}
+      select * from {{ source('source_adw_person', 'pe_stateprovince') }}
 ),
 renamed as (
     select
-        {{ adapter.quote("NAME") }},
-        {{ adapter.quote("ROWGUID") }},
-        {{ adapter.quote("TERRITORYID") }},
-        {{ adapter.quote("MODIFIEDDATE") }},
-        {{ adapter.quote("STATEPROVINCEID") }},
-        {{ adapter.quote("COUNTRYREGIONCODE") }},
-        {{ adapter.quote("STATEPROVINCECODE") }},
-        {{ adapter.quote("ISONLYSTATEPROVINCEFLAG") }}
+        {{ adapter.quote("STATEPROVINCEID") }} as state_province_id,
+        {{ adapter.quote("STATEPROVINCECODE") }} as state_province_code,
+        {{ adapter.quote("COUNTRYREGIONCODE") }} as country_region_code,
+        {{ adapter.quote("ISONLYSTATEPROVINCEFLAG") }} as is_only_state_province_flag,
+        {{ adapter.quote("NAME") }} as name,
+        {{ adapter.quote("TERRITORYID") }} as territory_id,
+        {{ adapter.quote("ROWGUID") }} as row_guid,
+        {{ adapter.quote("MODIFIEDDATE") }} as modified_date
 
     from source
 )

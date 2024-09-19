@@ -1,32 +1,32 @@
 sources:
   - name: source_adw_person
     database: delta
-    schema: PERSON
+    schema: bronze
     description: Person Source
     tables:
-      - name: abaddress
-        description: Address
-      - name: abaddresstype
-        description: Address Type
-      - name: abbusinessentity
-        description: Business Entity
-      - name: abbusinessentityaddress
-        description: Business Entity Address
-      - name: abbusinessentitycontact
-        description: Business Entity Contact
-      - name: abcontacttype
-        description: Contact Type
-      - name: abcountryregion
-        description: Country Region
-      - name: abemailaddress
-        description: Email Address
-      - name: abpassword
-        description: Password
-      - name: abperson
-        description: Person
-      - name: abpersonphone
-        description: Person Phone
-      - name: abphonenumbertype
-        description: Phone Number Type
-      - name: abstateprovince
-        description: State Province
+      - name: pe_address
+        description: Street address information for customers, employees, and vendors.
+      - name: pe_addresstype
+        description: Types of addresses stored in the Address table.
+      - name: pe_businessentity
+        description: Source of the ID that connects vendors, customers, and employees with address and contact information.
+      - name: pe_businessentityaddress
+        description: Cross-reference table mapping customers, vendors, and employees to their addresses.
+      - name: pe_businessentitycontact
+        description: Cross-reference table mapping stores, vendors, and employees to people.
+      - name: pe_contacttype
+        description: Lookup table containing the types of business entity contacts.
+      - name: pe_countryregion
+        description: Lookup table containing the ISO standard codes for countries and regions.
+      - name: pe_emailaddress
+        description: Where to send a person email.
+      - name: pe_password
+        description: One way hashed authentication information
+      - name: pe_person
+        description: "Human beings involved with AdventureWorks: employees, customer contacts, and vendor contacts."
+      - name: pe_personphone
+        description: Telephone number and type of a person.
+      - name: pe_phonenumbertype
+        description: Type of phone number of a person.
+      - name: pe_stateprovince
+        description: State and province lookup table.
