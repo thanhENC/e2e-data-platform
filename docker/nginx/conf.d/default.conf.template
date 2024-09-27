@@ -1,0 +1,17 @@
+# Please do not directly edit this file. Instead, modify the .env variables related to NGINX configuration.
+
+server {
+    listen ${NGINX_PORT};
+    server_name ${NGINX_SERVER_NAME};
+
+    location / {
+      proxy_pass http://trino:8080;
+      include proxy.conf;
+    }
+
+    # placeholder for acme challenge location
+    ${ACME_CHALLENGE_LOCATION}
+
+    # placeholder for https config defined in https.conf.template
+    ${HTTPS_CONFIG}
+}
