@@ -9,6 +9,20 @@ docker/volumes/
 data/
 .env
 
+# dbt
 dbt/target/
 dbt/dbt_packages/
 dbt/logs/
+
+# init adventureworkds data
+adw14/AdventureWorks*.zip
+adw14/data
+
+# nginx
+docker/nginx/conf.d/default.conf
+docker/nginx/ssl/*
+!docker/nginx/ssl/.gitkeep
+
+# trino
+docker/trino/catalog/*
+!docker/trino/catalog/.gitkeep
