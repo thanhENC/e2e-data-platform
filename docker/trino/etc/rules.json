@@ -1,0 +1,38 @@
+{
+    "catalogs": [
+        {
+            "catalog": "system",
+            "allow": true
+        },
+        {
+            "user": "postgres.user",
+            "catalog": "postgres",
+            "allow": true
+        },
+        {
+            "user": "delta.user",
+            "catalog": "delta",
+            "allow": true
+        },
+        {
+            "user": "admin",
+            "catalog": "delta",
+            "allow": true
+        },
+        {
+            "user": "admin",
+            "catalog": "postgres",
+            "allow": true
+        },
+        {
+            "user": "dbt.user",
+            "catalog": "delta",
+            "allow": true
+        },
+        {
+            "user": "dbt.user",
+            "catalog": "postgres",
+            "allow": true
+        }
+    ]
+}
