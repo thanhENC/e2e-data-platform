@@ -1,14 +1,13 @@
-# x-shared-env: &shared-env
-#   AWS_ACCESS_KEY: {$AWS_ACCESS_KEY}
-#   AWS_SECRET_KEY: {$AWS_SECRET_KEY}
-#   AWS_S3_ENDPOINT: {$AWS_S3_ENDPOINT}
-#   PG_HOST: {$PG_HOST}
-#   PG_PORT: {$PG_PORT}
-#   PG_USER: {$PG_USER}
-#   PG_PWD: {$PG_PWD}
-#   PG_DB: {$PG_DB}
+# """
+# Docker compose file for PoC data platform - batch processing
+# Author: thanhENC (github.com/thanhENC)
+# Contact: Van-An Dinh (linkedin.com/in/van-an-dinh)
+# """
 
 services:
+  # ==================================================
+  # MinIO service: S3 compatible object storage
+  # ==================================================
   minio:
     image: minio/minio:RELEASE.2024-09-13T20-26-02Z
     container_name: minio
@@ -31,6 +30,7 @@ services:
     networks:
       - data-network
 
+  # Create bucket in MinIO: create delta bucket
   createbucket:
     hostname: createbucket
     container_name: createbucket
@@ -48,15 +48,12 @@ services:
       /usr/bin/mc alias set myminio ${MINIO_ENDPOINT} ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY};
       /usr/bin/mc mb myminio/delta;
       "
-    # entrypoint: >
-    #   /bin/sh -c "
-    #   /usr/bin/mc alias set myminio ${MINIO_ENDPOINT} ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY};
-    #   /usr/bin/mc mb myminio/delta;
-    #   /usr/bin/mc anonymous set public myminio/delta;
-    #   "
     networks:
       - data-network
 
+  # ==================================================
+  # OLTP database service: PostgreSQL AdventureWorks database
+  # ==================================================
   oltp:
     hostname: oltp
     container_name: oltp-adw14
@@ -79,45 +76,9 @@ services:
     networks:
       - data-network
 
-  trino:
-    container_name: trino
-    image: "trinodb/trino:455"
-    hostname: trino
-    user: root
-    # restart: on-failure
-    environment:
-      # custom env vars
-      TRINO_PORT_EXPOSE: ${TRINO_PORT_EXPOSE:-8090}
-      # oltp catalog
-      OLTP_DB_HOST: ${OLTP_DB_HOST:-oltp}
-      OLTP_DB_PORT: ${OLTP_DB_PORT:-5432}
-      OLTP_DB_NAME: ${OLTP_DB_NAME:-adventureworks}
-      OLTP_DB_USER: ${OLTP_DB_USER:-adventureworks}
-      OLTP_DB_PASSWORD: ${OLTP_DB_PASSWORD:-adventureworks}
-      # delta catalog
-      HIVE_METASTORE_URI: ${HIVE_METASTORE_URI:-thrift://hive-metastore:9083}
-      MINIO_ENDPOINT: ${MINIO_ENDPOINT:-http://minio:9000}
-      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-minio_access_key}
-      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-minio_secret_key}
-      MINIO_SSL_ENABLED: ${MINIO_SSL_ENABLED:-false}
-    volumes:
-      - ./trino/etc:/usr/lib/trino/etc:ro
-      - ./trino/catalog:/etc/trino/catalog
-      - ./trino/templates:/etc/trino-template
-      - ./trino/trinoconfigcatalog.sh:/docker-entrypoint-mount.sh
-    entrypoint: [ "sh", "-c", "sed 's/\r$$//' /docker-entrypoint-mount.sh > /docker-entrypoint-clean.sh && chmod +x /docker-entrypoint-clean.sh && /docker-entrypoint-clean.sh && /usr/lib/trino/bin/run-trino" ]
-    ports:
-      - "${TRINO_PORT_EXPOSE}:8080"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/v1/info"]
-      interval: 30s
-      timeout: 20s
-      retries: 3
-    depends_on:
-      - hive-metastore
-    networks:
-      - data-network
-
+  # ==================================================
+  # Hive metastore service consists of PostgreSQL (metadata) and Hive metastore
+  # ==================================================
   # We use PostgreSQL to store Hive metadata about
   # how the datafile are mapped to schemas and tables
   metastore_db:
@@ -153,14 +114,12 @@ services:
       HIVE_METASTORE_JDBC_URL: ${META_DB_URL:-jdbc:postgresql://metastore_db:5432/metastore}
       HIVE_METASTORE_USER: ${META_DB_USER:-hive}
       HIVE_METASTORE_PASSWORD: ${META_DB_PASSWORD:-hive}
-      HIVE_METASTORE_WAREHOUSE_DIR: ${WAREHOUSE_DIR:-s3://delta} # HDFS config, we don't need it
-      HIVE_METASTORE_USERS_IN_ADMIN_ROLE: "admin" # We also don't need it
+      HIVE_METASTORE_WAREHOUSE_DIR: ${WAREHOUSE_DIR:-s3://delta}
+      HIVE_METASTORE_USERS_IN_ADMIN_ROLE: "admin"
       S3_ENDPOINT: ${MINIO_ENDPOINT:-http://minio:9000}
       S3_ACCESS_KEY: ${MINIO_ACCESS_KEY:-minio_access_key}
       S3_SECRET_KEY: ${MINIO_SECRET_KEY:-minio_secret_key}
       S3_PATH_STYLE_ACCESS: "true"
-      # Below arguments exist for no reasons, but
-      # we can not live without it
       REGION: ""
       GOOGLE_CLOUD_KEY_FILE_PATH: ""
       AZURE_ADL_CLIENT_ID: ""
@@ -181,55 +140,93 @@ services:
       - "${HIVE_METASTORE_PORT_EXPOSE}:9083"
     depends_on:
       - metastore_db
+      - minio
     networks:
       - data-network
 
-  # hive-metastore:
-  #   hostname: hive-metastore
-  #   container_name: hive-metastore
-  #   build: .
-  #   ports:
-  #     - 9083:9083
-  #   environment:
-  #     SERVICE_NAME: metastore
-  #     DB_DRIVER: postgres
-  #     HIVE_CUSTOM_CONF_DIR: /opt/hive/conf
-  #   volumes:
-  #     - ./hive-config:/opt/hive/conf
-  #     - ./hadoop-libs/hadoop-aws-3.1.0.jar:/opt/hive/lib/hadoop-aws-3.1.0.jar
-  #     - ./hadoop-libs/aws-java-sdk-bundle-1.11.271.jar:/opt/hive/lib/aws-java-sdk-bundle-1.11.271.jar
-  #   depends_on:
-  #     postgres:
-  #       condition: service_healthy
-  #   networks:
-  #     - wba-network
+  # ==================================================
+  # Trino: distributed SQL query engine for big data
+  # Trino cluster service consists of Trino `coordinator` and `worker`
+  # ==================================================
+  # Trino coordinator service: client-facing service that accepts incoming queries
+  trino:
+    container_name: trino
+    image: "trinodb/trino:455"
+    hostname: trino
+    user: root
+    profiles:
+      - trino
+    # restart: on-failure
+    environment:
+      # custom env vars
+      TRINO_PORT_EXPOSE: ${TRINO_PORT_EXPOSE:-8090}
+      # oltp catalog
+      OLTP_DB_HOST: ${OLTP_DB_HOST:-oltp}
+      OLTP_DB_PORT: ${OLTP_DB_PORT:-5432}
+      OLTP_DB_NAME: ${OLTP_DB_NAME:-adventureworks}
+      OLTP_DB_USER: ${OLTP_DB_USER:-adventureworks}
+      OLTP_DB_PASSWORD: ${OLTP_DB_PASSWORD:-adventureworks}
+      # delta catalog
+      HIVE_METASTORE_URI: ${HIVE_METASTORE_URI:-thrift://hive-metastore:9083}
+      MINIO_ENDPOINT: ${MINIO_ENDPOINT:-http://minio:9000}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-minio_access_key}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-minio_secret_key}
+      MINIO_SSL_ENABLED: ${MINIO_SSL_ENABLED:-false}
+    volumes:
+      - ./trino/etc/jvm.config:/etc/trino/jvm.config
+      - ./trino/etc/coordinator.config.properties:/etc/trino/config.properties
+      - ./trino/etc/coordinator.node.properties:/etc/trino/node.properties
+      - ./trino/etc/password-authenticator.properties:/etc/trino/password-authenticator.properties
+      - ./trino/etc/password.db:/usr/lib/trino/pwd/password.db
+      - ./trino/etc/access-control.properties:/etc/trino/access-control.properties
+      - ./trino/etc/rules.json:/etc/rules.json
+      - ./trino/catalog:/etc/trino/catalog
+      - ./trino/templates:/etc/trino-template
+      - ./trino/trinoconfigcatalog.sh:/docker-entrypoint-mount.sh
+    entrypoint: [ "sh", "-c", "sed 's/\r$$//' /docker-entrypoint-mount.sh > /docker-entrypoint-clean.sh && chmod +x /docker-entrypoint-clean.sh && /docker-entrypoint-clean.sh && /usr/lib/trino/bin/run-trino" ]
+    ports:
+      - "${TRINO_PORT_EXPOSE}:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/v1/info"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    depends_on:
+      - hive-metastore
+    networks:
+      - data-network
 
-  # hive-server:
-  #   hostname: hive-server
-  #   container_name: hive-server
-  #   image: apache/hive:3.1.3
-  #   ports:
-  #     - 10000:10000
-  #     - 10002:10002
-  #   environment:
-  #     SERVICE_NAME: hiveserver2
-  #     IS_RESUME: "true"
-  #     HIVE_CUSTOM_CONF_DIR: /opt/hive/conf
-  #   volumes:
-  #     - ./hive-config:/opt/hive/conf
-  #     - ./hadoop-libs/hadoop-aws-3.1.0.jar:/opt/hive/lib/hadoop-aws-3.1.0.jar
-  #     - ./hadoop-libs/aws-java-sdk-bundle-1.11.271.jar:/opt/hive/lib/aws-java-sdk-bundle-1.11.271.jar
-  #   depends_on:
-  #     postgres:
-  #       condition: service_healthy
-  #   networks:
-  #     - wba-network
+  # Trino worker service: worker nodes that execute the query
+  trino-worker:
+    image: "trinodb/trino:455"
+    profiles:
+      - trino
+    volumes:
+      - ./trino/etc/jvm.config:/etc/trino/jvm.config
+      - ./trino/etc/worker.config.properties:/etc/trino/config.properties
+      - ./trino/etc/worker.node.properties:/etc/trino/node.properties
+      - ./trino/catalog:/etc/trino/catalog
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/v1/info"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    depends_on:
+      - trino
+    networks:
+      - data-network
 
+  # ==================================================
+  # Spark cluster service consists of Spark master and worker
+  # use `docker-compose --profile spark up` to start the Spark cluster.
+  # ==================================================
   spark-master:
     hostname: spark-master
     container_name: spark-master
     image: bitnami/spark:3.4.1
     command: bin/spark-class org.apache.spark.deploy.master.Master
+    profiles:
+      - spark
     environment:
       SPARK_MODE: master
       # custom env vars
@@ -256,9 +253,10 @@ services:
 
   spark-worker:
     hostname: spark-worker
-    # container_name: spark-worker
     image: bitnami/spark:3.4.1
     command: bin/spark-class org.apache.spark.deploy.worker.Worker ${SPARK_MASTER_URL}
+    profiles:
+      - spark
     depends_on:
       - spark-master
     environment:
@@ -272,7 +270,81 @@ services:
       - ${SPARK_WORKER_IP_RANGE}:8081
     networks:
       - data-network
+    
+  # ==================================================
+  # Certbot service: Let's Encrypt service for SSL certificates
+  # use `docker-compose --profile certbot up` to start the certbot service.
+  # ==================================================
+  certbot:
+    image: certbot/certbot
+    profiles:
+      - certbot
+    container_name: certbot
+    volumes:
+      - ./volumes/certbot/conf:/etc/letsencrypt
+      - ./volumes/certbot/www:/var/www/html
+      - ./volumes/certbot/logs:/var/log/letsencrypt
+      - ./volumes/certbot/conf/live:/etc/letsencrypt/live
+      - ./certbot/update-cert.template.txt:/update-cert.template.txt
+      - ./certbot/docker-entrypoint.sh:/docker-entrypoint.sh
+    environment:
+      - CERTBOT_EMAIL=${CERTBOT_EMAIL}
+      - CERTBOT_DOMAIN=${CERTBOT_DOMAIN}
+      - CERTBOT_OPTIONS=${CERTBOT_OPTIONS:-}
+    entrypoint: [ "/docker-entrypoint.sh" ]
+    command: [ "tail", "-f", "/dev/null" ]
 
+  # ==================================================
+  # Nginx service: reverse proxy service
+  # used for reverse proxying the Trino service and other web service.
+  # ==================================================
+  nginx:
+    image: nginx:latest
+    restart: always
+    container_name: nginx
+    profiles:
+      - trino
+    volumes:
+      - ./nginx/nginx.conf.template:/etc/nginx/nginx.conf.template
+      - ./nginx/proxy.conf.template:/etc/nginx/proxy.conf.template
+      - ./nginx/https.conf.template:/etc/nginx/https.conf.template
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/docker-entrypoint.sh:/docker-entrypoint-mount.sh
+      - ./nginx/ssl:/etc/ssl # cert dir (legacy)
+      - ./volumes/certbot/conf/live:/etc/letsencrypt/live # cert dir (with certbot container)
+      - ./volumes/certbot/conf:/etc/letsencrypt
+      - ./volumes/certbot/www:/var/www/html
+    entrypoint: [ "sh", "-c", "cp /docker-entrypoint-mount.sh /docker-entrypoint.sh && sed -i 's/\r$$//' /docker-entrypoint.sh && chmod +x /docker-entrypoint.sh && /docker-entrypoint.sh" ]
+    environment:
+      NGINX_SERVER_NAME: ${NGINX_SERVER_NAME:-_}
+      NGINX_HTTPS_ENABLED: ${NGINX_HTTPS_ENABLED:-false}
+      NGINX_SSL_PORT: ${NGINX_SSL_PORT:-443}
+      NGINX_PORT: ${NGINX_PORT:-80}
+      # You're required to add your own SSL certificates/keys to the `./nginx/ssl` directory
+      # and modify the env vars below in .env if HTTPS_ENABLED is true.
+      NGINX_SSL_CERT_FILENAME: ${NGINX_SSL_CERT_FILENAME:-fullchain.pem}
+      NGINX_SSL_CERT_KEY_FILENAME: ${NGINX_SSL_CERT_KEY_FILENAME:-privkey.pem}
+      NGINX_SSL_PROTOCOLS: ${NGINX_SSL_PROTOCOLS:-TLSv1.1 TLSv1.2 TLSv1.3}
+      NGINX_WORKER_PROCESSES: ${NGINX_WORKER_PROCESSES:-auto}
+      NGINX_CLIENT_MAX_BODY_SIZE: ${NGINX_CLIENT_MAX_BODY_SIZE:-15M}
+      NGINX_KEEPALIVE_TIMEOUT: ${NGINX_KEEPALIVE_TIMEOUT:-65}
+      NGINX_PROXY_READ_TIMEOUT: ${NGINX_PROXY_READ_TIMEOUT:-3600s}
+      NGINX_PROXY_SEND_TIMEOUT: ${NGINX_PROXY_SEND_TIMEOUT:-3600s}
+      NGINX_ENABLE_CERTBOT_CHALLENGE: ${NGINX_ENABLE_CERTBOT_CHALLENGE:-false}
+      CERTBOT_DOMAIN: ${CERTBOT_DOMAIN:-}
+    depends_on:
+      - trino
+    ports:
+      - "${EXPOSE_NGINX_PORT:-80}:${NGINX_PORT:-80}"
+      - "${EXPOSE_NGINX_SSL_PORT:-443}:${NGINX_SSL_PORT:-443}"
+    networks:
+      - data-network
+
+# ==================================================
+# Networks configuration
+# data-network: external network for data platform services. This network must be created before running the docker-compose file.
+# use `docker network create --driver bridge data-network` to create the network.
+# ==================================================
 networks:
   data-network:
     external: true
