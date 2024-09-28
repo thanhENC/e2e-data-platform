@@ -1,11 +1,11 @@
 with source as (
-      select * from {{ source('source_adw_sales', 'abcountryregioncurrency') }}
+      select * from {{ source('source_adw_sales', 'sa_countryregioncurrency') }}
 ),
 renamed as (
     select
-        {{ adapter.quote("CURRENCYCODE") }},
-        {{ adapter.quote("MODIFIEDDATE") }},
-        {{ adapter.quote("COUNTRYREGIONCODE") }}
+        {{ adapter.quote("COUNTRYREGIONCODE") }} as country_region_code,
+        {{ adapter.quote("CURRENCYCODE") }} as currency_code,
+        {{ adapter.quote("MODIFIEDDATE") }} as modified_date
         
     from source
 )

@@ -1,13 +1,13 @@
 with source as (
-      select * from {{ source('source_adw_person', 'abbusinessentityaddress') }}
+      select * from {{ source('source_adw_person', 'pe_businessentityaddress') }}
 ),
 renamed as (
     select
-        {{ adapter.quote("ROWGUID") }},
-        {{ adapter.quote("ADDRESSID") }},
-        {{ adapter.quote("MODIFIEDDATE") }},
-        {{ adapter.quote("ADDRESSTYPEID") }},
-        {{ adapter.quote("BUSINESSENTITYID") }}
+        {{ adapter.quote("BUSINESSENTITYID") }} as business_entity_id,
+        {{ adapter.quote("ADDRESSID") }} as address_id,
+        {{ adapter.quote("ADDRESSTYPEID") }} as address_type_id,
+        {{ adapter.quote("ROWGUID") }} as row_guid,
+        {{ adapter.quote("MODIFIEDDATE") }} as modified_date
 
     from source
 )

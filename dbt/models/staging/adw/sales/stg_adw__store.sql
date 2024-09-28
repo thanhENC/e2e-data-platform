@@ -1,14 +1,14 @@
 with source as (
-      select * from {{ source('source_adw_sales', 'abstore') }}
+      select * from {{ source('source_adw_sales', 'sa_store') }}
 ),
 renamed as (
     select
-        {{ adapter.quote("NAME") }},
-        {{ adapter.quote("ROWGUID") }},
-        {{ adapter.quote("DEMOGRAPHICS") }},
-        {{ adapter.quote("MODIFIEDDATE") }},
-        {{ adapter.quote("SALESPERSONID") }},
-        {{ adapter.quote("BUSINESSENTITYID") }}
+        {{ adapter.quote("businessentityid") }} as business_entity_id,
+        {{ adapter.quote("name") }} as name,
+        {{ adapter.quote("salespersonid") }} as sales_person_id,
+        {{ adapter.quote("demographics") }} as demographics,
+        {{ adapter.quote("rowguid") }} as row_guid,
+        {{ adapter.quote("modifieddate") }} as modified_date
 
     from source
 )

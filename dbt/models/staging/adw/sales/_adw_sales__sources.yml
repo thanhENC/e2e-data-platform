@@ -1,36 +1,44 @@
 sources:
   - name: source_adw_sales
-    database: ADW14
-    schema: SALES
+    database: delta
+    schema: bronze
     description: Sales Source
     tables:
-      - name: abcountryregioncurrency
-        description: Country Region Currency
-      - name: abcreditcard
-        description: Credit Card information
-      - name: abcurrency
-        description: Currency
-      - name: abcustomer
-        description: Customer
-      - name: abpersoncreditcard
-        description: Personal Credit Card
-      - name: absalesorderdetail
-        description: Sales Order Detail
-      - name: absalesorderheader
-        description: Sales Order Header
-      - name: absalesorderheadersalesreason
-        description: Sales Order Header Sales Reason
-      - name: absalesreason
-        description: Sales Reason
-      - name: absalestaxrate
-        description: Sales Tax Rate
-      - name: absalesterritory
-        description: Sales Territory
-      - name: absalesterritoryhistory
-        description: Sales Territory History
-      - name: abshoppingcartitem
-        description: Shopping Cart Item
-      - name: abspecialoffer
-        description: Special Offer
-      - name: abstore
-        description: Store
+      - name: sa_countryregioncurrency
+        description: Cross-reference table mapping ISO currency codes to a country or region.
+      - name: sa_creditcard
+        description: Customer credit card information.
+      - name: sa_currency
+        description: Lookup table containing standard ISO currencies.
+      - name: sa_currencyrate
+        description: Currency exchange rates.
+      - name: sa_customer
+        description: Current customer information. Also see the Person and Store tables.
+      - name: sa_personcreditcard
+        description: Cross-reference table mapping people to their credit card information in the CreditCard table.
+      - name: sa_salesorderdetail
+        description: Individual products associated with a specific sales order. See SalesOrderHeader.
+      - name: sa_salesorderheader
+        description: General sales order information.
+      - name: sa_salesorderheadersalesreason
+        description: Cross-reference table mapping sales orders to sales reason codes.
+      - name: sa_salesperson
+        description: Sales representative current information.
+      - name: sa_salespersonquotahistory
+        description: Sales performance tracking.
+      - name: sa_salesreason
+        description: Lookup table of customer purchase reasons.
+      - name: sa_salestaxrate
+        description: Tax rate lookup table.
+      - name: sa_salesterritory
+        description: Sales territory lookup table.
+      - name: sa_salesterritoryhistory
+        description: Sales representative transfers to other sales territories.
+      - name: sa_shoppingcartitem
+        description: Contains online customer orders until the order is submitted or cancelled.
+      - name: sa_specialoffer
+        description: Sale discounts lookup table.
+      - name: sa_specialofferproduct
+        description: Cross-reference table mapping products to special offer discounts.
+      - name: sa_store
+        description: Customers (resellers) of Adventure Works products.

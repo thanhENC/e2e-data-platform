@@ -1,0 +1,53 @@
+# config:
+#   send_anonymous_usage_stats: <true | false>
+#   use_colors: <true | false>
+#   partial_parse: <true | false>
+#   printer_width: <integer>
+#   write_json: <true | false>
+#   warn_error: <true | false>
+#   warn_error_options: <include: all | include: [<error-name>] | include: all, exclude: [<error-name>]>
+#   log_format: <text | json | default>
+#   debug: <true | false>
+#   version_check: <true | false>
+#   fail_fast: <true | false>
+#   indirect_selection: <eager | cautious | buildable | empty>
+#   use_experimental_parser: <true | false>
+#   static_parser: <true | false>
+#   cache_selected_only: <true | false>
+#   populate_cache: <true | false>
+
+dbt_adw_profile:
+  target: dev
+  outputs:
+    dev:
+      type: trino
+      method: none
+      user: admin
+      password: 
+      host: localhost
+      port: 8090
+      catalog: delta
+      schema: dev
+      threads: 4
+      http_scheme: http
+      session_properties:
+        query_max_run_time: 3600s
+        query_max_memory: 2GB
+      client_session_keep_alive: False
+      query_tag: dev_dbt_adw
+    prod:
+      type: trino
+      method: none
+      user: admin
+      password:
+      host: localhost
+      port: 8090
+      catalog: delta
+      schema: prod
+      threads: 4
+      http_scheme: http
+      session_properties:
+        query_max_run_time: 3600s
+        query_max_memory: 2GB
+      client_session_keep_alive: False
+      query_tag: prod_dbt_adw
