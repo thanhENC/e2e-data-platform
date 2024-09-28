@@ -2,19 +2,19 @@ models:
   - name: int_sales_customers
     description: Intermediate salese customers
     columns:
-      - name: rowguid
+      - name: row_guid
         description: record id
         data_type: varchar
-      - name: storeid
+      - name: store_id
         description: store
         data_type: integer
-      - name: personid
+      - name: person_id
         data_type: integer
-      - name: customerid
+      - name: customer_id
         description: customer
         data_type: integer
-      - name: territoryid
+      - name: territory_id
         data_type: integer
-      - name: modifieddate
+      - name: modified_date
         description: timestamp
         data_type: timestamp(3) with time zone
