@@ -21,6 +21,15 @@ This is a simple example of how to use a password file with Trino. The password 
     ```
     Then enter the password for the new user
 
+### Example:
+In this project, there are 04 users
+| Username | Password | Catalog |
+|----------|----------|---------|
+| `admin`  | `admin`  | `system`, `postgres`, `delta` |
+| `delta.user`  | `123456789`  | `system`, `delta` |
+| `postgres.user`  | `123456789`  | `system`, `postgres` |
+| `dbt.user` | `123456789`  | `system`, `postgres`, `delta` |
+
 ### Resources:
 - [Trino Password File](https://trino.io/docs/current/security/password-file.html)
 

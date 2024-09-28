@@ -26,3 +26,8 @@ docker/nginx/ssl/*
 # trino
 docker/trino/catalog/*
 !docker/trino/catalog/.gitkeep
+
+# backup
+docker/backup/*
+!docker/backup/README.md
+!docker/backup/.gitkeep
