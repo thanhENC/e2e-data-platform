@@ -71,11 +71,23 @@ spark-submit:
 # Backup OLTP, Minio and Hive metastore data
 # -----------------------------------------------------------------------------
 .PHONY: backup
-backup:
+backup: pg-dump-oltp pg-dump-metastore
 	@mkdir -p backup
 	@sudo apt install zip unzip
 	@zip -r backup/volumes.zip volumes
 	@echo "Backup completed"
+
+# Postgres dump OLTP data
+# -----------------------------------------------------------------------------
+.PHONY: pg-dump-oltp
+pg-dump-oltp:
+	@pg_dump --dbname="postgresql://adventureworks:adventureworks@localhost:6543/adventureworks" -Fc -f /root/e2e-data-platform/docker/backup/adventureworks.bak
+
+# Postgres dump Metastore data
+# -----------------------------------------------------------------------------
+.PHONY: pg-dump-metastore
+pg-dump-metastore:
+	@pg_dump --dbname="postgresql://hive:hive@localhost:5433/metastore" -Fc -f /root/e2e-data-platform/docker/backup/metastore.bak
 
 # Initialize adventureworks database
 .PHONY: init-db
