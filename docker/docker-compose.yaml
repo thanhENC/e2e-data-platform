@@ -270,6 +270,81 @@ services:
       - ${SPARK_WORKER_IP_RANGE}:8081
     networks:
       - data-network
+
+  # ==================================================
+  # Lightdash service: BI tool for data exploration
+  # use `docker-compose --profile lightdash up` to start the Lightdash service.
+  # ==================================================
+  lightdash:
+    container_name: lightdash
+    platform: linux/amd64
+    image: lightdash/lightdash:latest
+    depends_on:
+      - lightdash-db
+    environment:
+      - PGHOST=${LD_PGHOST:-"lightdash-db"}
+      - PGPORT=${LD_PGPORT:-5432}
+      - PGUSER=${LD_PGUSER:-lightdash}
+      - PGPASSWORD=${LD_PGPASSWORD:-lightdash}
+      - PGDATABASE=${LD_PGDATABASE:-lightdash}
+      - SECURE_COOKIES=${SECURE_COOKIES:-false}
+      - TRUST_PROXY=${TRUST_PROXY:-false}
+      - LIGHTDASH_SECRET=${LIGHTDASH_SECRET}
+      - PORT=8080
+      - LIGHTDASH_LOG_LEVEL=${LIGHTDASH_LOG_LEVEL}
+      - LIGHTDASH_INSTALL_ID=${LIGHTDASH_INSTALL_ID}
+      - LIGHTDASH_INSTALL_TYPE=${LIGHTDASH_INSTALL_TYPE:-docker_image}
+      - AUTH_DISABLE_PASSWORD_AUTHENTICATION=${AUTH_DISABLE_PASSWORD_AUTHENTICATION}
+      - AUTH_ENABLE_GROUP_SYNC=${AUTH_ENABLE_GROUP_SYNC}
+      - AUTH_GOOGLE_ENABLED=${AUTH_GOOGLE_ENABLED}
+      - AUTH_GOOGLE_OAUTH2_CLIENT_ID=${AUTH_GOOGLE_OAUTH2_CLIENT_ID}
+      - AUTH_GOOGLE_OAUTH2_CLIENT_SECRET=${AUTH_GOOGLE_OAUTH2_CLIENT_SECRET}
+      - SITE_URL=${SITE_URL}
+      - EMAIL_SMTP_HOST=${EMAIL_SMTP_HOST}
+      - EMAIL_SMTP_PORT=${EMAIL_SMTP_PORT}
+      - EMAIL_SMTP_SECURE=${EMAIL_SMTP_SECURE}
+      - EMAIL_SMTP_USER=${EMAIL_SMTP_USER}
+      - EMAIL_SMTP_PASSWORD=${EMAIL_SMTP_PASSWORD}
+      - EMAIL_SMTP_ALLOW_INVALID_CERT=${EMAIL_SMTP_ALLOW_INVALID_CERT}
+      - EMAIL_SMTP_SENDER_NAME=${EMAIL_SMTP_SENDER_NAME}
+      - EMAIL_SMTP_SENDER_EMAIL=${EMAIL_SMTP_SENDER_EMAIL}
+      - ALLOW_MULTIPLE_ORGS=${ALLOW_MULTIPLE_ORGS:-false}
+      - LIGHTDASH_QUERY_MAX_LIMIT=${LIGHTDASH_QUERY_MAX_LIMIT}
+      - LIGHTDASH_MAX_PAYLOAD=${LIGHTDASH_MAX_PAYLOAD:-5mb}
+      - HEADLESS_BROWSER_HOST=headless-browser
+      - HEADLESS_BROWSER_PORT=3000
+      - RUDDERSTACK_WRITE_KEY=${RUDDERSTACK_WRITE_KEY}
+      - SCHEDULER_ENABLED=true
+      - GROUPS_ENABLED=${GROUPS_ENABLED:-false}
+    volumes:
+      - ${DBT_PROJECT_DIR}:/usr/app/dbt
+    ports:
+      - ${LD_PORT_EXPOSE:-8080}:${PORT:-8080}
+    networks:
+      - data-network
+
+  lightdash-db:
+    container_name: lightdash-db
+    image: postgres:15.4
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${LD_PGPASSWORD:-lightdash}
+      POSTGRES_USER: ${LD_PGUSER:-lightdash}
+      POSTGRES_DB: ${LD_PGDATABASE:-lightdash}
+    volumes:
+      - ./volumes/lightdash-db:/var/lib/postgresql/data
+    ports:
+      - 54321:5432
+    networks:
+      - data-network
+
+  headless-browser:
+    image: browserless/chrome
+    restart: always
+    ports:
+      - "3001:3000"
+    networks:
+      - data-network
     
   # ==================================================
   # Certbot service: Let's Encrypt service for SSL certificates
