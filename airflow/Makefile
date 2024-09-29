@@ -7,8 +7,10 @@ build:
 
 # docker compose up -d --no-deps --build airflow-webserver airflow-scheduler
 # Run docker compose
-compose-up: build
-	@docker compose up -d --no-deps --build
+compose-init: build compose-up
+
+compose-up:
+	@docker compose up -d
 	@docker ps
 
 compose-down:

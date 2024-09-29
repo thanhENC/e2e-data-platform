@@ -1,20 +1,24 @@
 from airflow import DAG
 from datetime import datetime 
 from airflow.providers.ssh.operators.ssh import SSHOperator
-
+from datetime import datetime, timedelta
 import logging
 from airflow.providers.slack.hooks.slack_webhook import SlackWebhookHook
 from airflow.utils.state import State
 
 default_args = {
+    'owner': 'thanhenc',
+    'depends_on_past': False,
     'start_date': datetime(2024, 1, 1),
-    'catchup': False
+    'retries': 1,
+    'retry_delay': timedelta(minutes=5),
 }
 
 dag = DAG(
     'delta-create-schema',
     default_args=default_args,
-    schedule_interval='@once',
+    schedule_interval='30 16 * * *',
+    catchup=False
 )
  
 # Source:
