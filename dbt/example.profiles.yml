@@ -21,15 +21,15 @@ dbt_adw_profile:
   outputs:
     dev:
       type: trino
-      method: none
-      user: admin
-      password: 
-      host: localhost
-      port: 8090
+      method: ldap
+      user: dbt.user
+      password: "123456789"
+      host: <trino-coordinator.domain.name>
+      port: 443
       catalog: delta
       schema: dev
       threads: 4
-      http_scheme: http
+      http_scheme: https
       session_properties:
         query_max_run_time: 3600s
         query_max_memory: 2GB
@@ -37,15 +37,15 @@ dbt_adw_profile:
       query_tag: dev_dbt_adw
     prod:
       type: trino
-      method: none
-      user: admin
-      password:
-      host: localhost
-      port: 8090
+      method: ldap
+      user: dbt.user
+      password: "123456789"
+      host: <trino-coordinator.domain.name>
+      port: 443
       catalog: delta
       schema: prod
       threads: 4
-      http_scheme: http
+      http_scheme: https
       session_properties:
         query_max_run_time: 3600s
         query_max_memory: 2GB

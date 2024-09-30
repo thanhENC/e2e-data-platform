@@ -13,6 +13,7 @@ data/
 dbt/target/
 dbt/dbt_packages/
 dbt/logs/
+dbt/profiles.yml
 
 # init adventureworkds data
 adw14/AdventureWorks*.zip
