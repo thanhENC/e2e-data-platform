@@ -1,0 +1,13 @@
+sources:
+  - name: source_adw_production
+    database: delta
+    schema: bronze
+    description: Production Source
+    tables:
+      - name: pr_product
+        description: Products sold or used in the manfacturing of sold products.
+      - name: pr_productcategory
+        description: High-level product categorization.
+      - name: pr_productsubcategory
+        description: Low-level product categorization.
+      
