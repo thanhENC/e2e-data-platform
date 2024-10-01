@@ -1,54 +1,57 @@
-name: 'theweekdays_adw'
-version: '1.0.0'
+name: theweekdays_adw
+version: 1.0.0
 config-version: 2
-
-profile: 'dbt_adw_profile'
-
-model-paths: ["models"]
-analysis-paths: ["analyses"]
-test-paths: ["tests"]
-seed-paths: ["seeds"]
-macro-paths: ["macros"]
-snapshot-paths: ["snapshots"]
-
-target-path: "target"
-
+profile: dbt_adw_profile
+model-paths:
+  - models
+analysis-paths:
+  - analyses
+test-paths:
+  - tests
+seed-paths:
+  - seeds
+macro-paths:
+  - macros
+snapshot-paths:
+  - snapshots
+target-path: target
 clean-targets:
-  - "target"
-  - "dbt_packages"
-
-# Configuring models
-# Full documentation: https://docs.getdbt.com/docs/configuring-models
+  - target
+  - dbt_packages
 models:
   theweekdays_adw:
     +materialized: table
-
     staging:
       +materialized: view
       +database: delta
       +schema: staging
       adw:
-        +tags: ['staging', 'adw']
+        +tags:
+          - staging
+          - adw
         sales:
-          +tags: ['sales']
+          +tags:
+            - sales
         person:
-          +tags: ['person']
-
+          +tags:
+            - person
     intermediate:
       +materialized: view
       +database: delta
       +schema: silver
       sales:
-        +tags: ['intermediate']
-
+        +tags:
+          - intermediate
     marts:
       +materialized: table
       +database: delta
       +schema: gold
+      +tags:
+        - marts
       sales:
-        +tags: ['marts']
-        +on_table_exists: drop # This configuration is used to fix 'TrinoUserError(type=USER_ERROR, name=NOT_SUPPORTED, message="Table rename is not yet supported by Glue service")'
-
+        +tags:
+          - sales
+        +on_table_exists: drop
 snapshots:
   +database: delta
   +schema: snapshot
