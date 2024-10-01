@@ -1,0 +1,314 @@
+version: 2
+
+models:
+  - name: dim_customers
+    description: "Dimension table for customer data"
+    columns:
+      - name: customer_key
+        description: "Unique key for each customer"
+        tests:
+          - unique
+          - not_null
+        meta:
+          metrics:
+            count_existing_customers:
+              type: count_distinct
+              label: 'Count of existing customers'
+              description: 'Counts the number of existing customers based on the customer key.' 
+      - name: customer_id
+        description: "Customer ID"
+      - name: customer_type
+        description: "Type of customer"
+      - name: full_name
+        description: "Full name of the customer"
+        meta:
+          dimension:
+            hidden: true
+            description: "Hide this sensitive data in lightdash"
+
+  - name: dim_products
+    description: "Dimension table for products data"
+    columns:
+      - name: product_key
+        description: "Unique key for each product"
+        tests:
+          - unique
+          - not_null
+      - name: product_id
+        description: "Product ID"
+      - name: product_name
+        description: "Name of the product"
+      - name: product_number
+        description: "Product number identifier"
+      - name: make_flag
+        description: "Flag indicating if the product is made in-house"
+      - name: color
+        description: "Color of the product"
+      - name: color_category
+        description: "Category of the product color"
+      - name: standard_cost
+        description: "Standard cost of the product"
+      - name: list_price
+        description: "List price of the product"
+      - name: product_max_gross_profit
+        description: "Maximum gross profit for the product"
+      - name: product_line
+        description: "Product line"
+      - name: class
+        description: "Class of the product"
+      - name: style
+        description: "Product style"
+      - name: subcategory_name
+        description: "Product subcategory"
+      - name: category_name
+        description: "Product category"
+
+  - name: dim_date
+    description: "Dimension table for dates"
+    columns:
+      - name: date_day
+        description: "Day of the date"
+      - name: prior_date_day
+        description: "Previous day"
+      - name: next_date_day
+        description: "Next day"
+      - name: prior_year_date_day
+        description: "Same date of the previous year"
+      - name: is_day_off
+        description: "Indicates if the day is a day off (weekend or holiday)"
+      - name: is_double_day
+        description: "Indicates if the day and month are the same"
+      - name: day_of_week_iso
+        description: "ISO day of the week"
+      - name: day_of_week_name
+        description: "Name of the day of the week"
+      - name: day_of_week_name_short
+        description: "Short name of the day of the week"
+      - name: day_of_month
+        description: "Day of the month"
+      - name: day_of_year
+        description: "Day of the year"
+      - name: week_of_year
+        description: "Week number of the year"
+      - name: month_of_year
+        description: "Month number of the year"
+      - name: month_name
+        description: "Name of the month"
+      - name: month_name_short
+        description: "Short name of the month"
+      - name: quarter_of_year
+        description: "Quarter of the year"
+      - name: year_number
+        description: "Year number"
+
+  - name: fact_sales
+    description: "Fact table for sales data"
+    meta:
+      # ==================================================
+      # Group details are used to group columns in the UI
+      # ==================================================
+      group_details:
+        finance:
+          label: Finance
+          description: "Financial-related fields of orders"
+        line_finance:
+          label: Line Finance
+          description: "Financial-related fields of order lines"
+        key:
+          label: Key
+          description: "Key fields"
+        time:
+          label: Time
+          description: "Date-related fields"
+      # ==================================================
+      # Join details are used to define the joins between tables
+      # ==================================================
+      joins:
+        - join: dim_date
+          label: Date
+          type: left
+          sql_on: ${dim_date.date_day} = ${fact_sales.order_date}
+        - join: dim_customers
+          label: Customer
+          type: left
+          sql_on: ${dim_customers.customer_key} = ${fact_sales.customer_key}
+        - join: dim_products
+          label: Product
+          type: left
+          sql_on: ${dim_products.product_key} = ${fact_sales.product_key}
+    # ==================================================
+    # Columns are the fields of the fact table
+    # ==================================================
+    columns:
+      # ========== sales_key ==========
+      - name: sales_key
+        description: "Unique key for each sales record"
+        tests:
+          - unique
+          - not_null
+        meta:
+            dimension:
+                type: string
+                groups: ['key']
+      # ========== sales_order_id ==========
+      - name: sales_order_id
+        description: "Sales order ID"
+        meta:
+            dimension:
+                type: number
+                groups: ['key']
+      # ========== sales_order_detail_id ==========
+      - name: sales_order_detail_id
+        description: "Sales order detail ID"
+        meta:
+            dimension:
+                type: number
+                groups: ['key']
+      # ========== order_date ==========
+      - name: order_date
+        description: "Date of the order"
+        meta:
+            dimension:
+                type: date
+                time_intervals: ['RAW', 'DAY', 'MONTH', 'QUARTER', 'YEAR']
+                groups: ['time']
+      # ========== online_order_flag ==========
+      - name: online_order_flag
+        description: "Indicates if the order was placed online"
+        meta:
+            dimension:
+                type: boolean
+      # ========== customer_key ==========
+      - name: customer_key
+        description: "Foreign key referencing customer"
+        tests:
+          - relationships:
+              to: ref('dim_customers')
+              field: customer_key
+        meta:
+            dimension:
+                type: string
+                groups: ['key']
+            metrics:
+                count_distinct_customer_key:
+                    type: count_distinct
+                    label: 'Total unique customers'
+                    description: 'Counts the number of unique customers with others based on the customer key.'
+      # ========== product_key ==========
+      - name: product_key
+        description: "Foreign key referencing product"
+        tests:
+          - relationships:
+              to: ref('dim_products')
+              field: product_key
+        meta:
+            dimension:
+                type: string
+                groups: ['key']
+      # ========== standard_cost ==========
+      - name: standard_cost
+        description: "Standard cost of the sale"
+        meta:
+            dimension:
+                type: number
+                format: 'usd'
+                groups: ['finance', 'line_finance']
+                required_attributes:
+                  is_admin: "true"
+      # ========== order_quantity ==========
+      - name: order_quantity
+        description: "Quantity of products ordered"
+        meta:
+            dimension:
+                type: number
+      # ========== unit_price ==========
+      - name: unit_price
+        description: "Price per unit"
+        meta:
+            dimension:
+                type: number
+                format: 'usd'
+                groups: ['finance', 'line_finance']
+      # ========== unit_price_percent_discount ==========
+      - name: unit_price_percent_discount
+        description: "Percentage discount on the unit price"
+        meta:
+            dimension:
+                type: number
+                format: percent
+                groups: ['finance', 'line_finance']
+      # ========== line_total ==========
+      - name: line_total
+        description: "Total for the sales line"
+        meta:
+            dimension:
+                type: number
+                format: 'usd'
+                groups: ['finance', 'line_finance']
+            additional_dimensions:
+                line_profit:
+                    type: number
+                    format: 'usd'
+                    sql: ${fact_sales.line_total} - ${fact_sales.total_product_cost}
+                    groups: ['finance', 'line_finance']
+      # ========== total_product_cost ==========
+      - name: total_product_cost
+        description: "Total product cost"
+        meta:
+            dimension:
+                type: number
+                format: 'usd'
+                groups: ['finance', 'line_finance']
+      # ========== tax_amount ==========
+      - name: tax_amount
+        description: "Amount of tax applied"
+        meta:
+            dimension:
+                type: number
+                format: 'usd'
+                groups: ['finance']
+      # ========== sub_total ==========
+      - name: sub_total
+        description: "Subtotal of the order"
+        meta:
+            dimension:
+                type: number
+                format: 'usd'
+                groups: ['finance']
+      # ========== shipping_cost ==========
+      - name: shipping_cost
+        description: "Shipping cost"
+        meta:
+            dimension:
+                type: number
+                format: 'usd'
+                groups: ['finance']
+      # ========== total_due ==========
+      - name: total_due
+        description: "Total amount due for the order"
+        meta:
+            dimension:
+                type: number
+                label: 'Total due'
+                format: 'usd'
+                description: 'Total amount due for the order'
+                hidden: false
+                round: 2
+                groups: ['finance']
+            metrics:
+                total_due_sum:
+                    type: sum
+                    format: 'usd'
+                    compact: M
+                    label: 'Total due sum'
+                    description: 'Sum of the total due amount'
+                    filters:
+                      - fact_sales.sales_order_detail_id: 1
+                avg_total_due:
+                    type: average
+                    format: 'usd'
+                    compact: K
+                    label: 'Average total due'
+                    description: 'Average of the total due amount'
+                    filters:
+                      - fact_sales.sales_order_detail_id: 1
