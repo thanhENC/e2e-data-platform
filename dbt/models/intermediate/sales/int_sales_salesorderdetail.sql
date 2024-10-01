@@ -4,7 +4,7 @@ with sales_order_detail as (
     select 
         odetail.sales_order_id,
         odetail.sales_order_detail_id,
-        oheader.order_date,
+        cast( oheader.order_date as date ) as order_date,
         oheader.online_order_flag,
         oheader.customer_id,
         odetail.product_id,

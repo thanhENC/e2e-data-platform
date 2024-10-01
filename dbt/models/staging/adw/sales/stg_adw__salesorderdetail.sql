@@ -1,8 +1,8 @@
 with source as (
       select
         *, 
-        CAST( {{ adapter.quote("unitprice") }} as DECIMAL(20, 3) ) as decimal_unit_price,
-        CAST( {{ adapter.quote("unitpricediscount") }} as DECIMAL(10, 3) ) as decimal_unit_price_discount
+        CAST( {{ adapter.quote("unitprice") }} as DECIMAL(20, 4) ) as decimal_unit_price,
+        CAST( {{ adapter.quote("unitpricediscount") }} as DECIMAL(10, 4) ) as decimal_unit_price_discount
       from {{ source('source_adw_sales', 'sa_salesorderdetail') }}
 ),
 
@@ -16,7 +16,7 @@ renamed as (
         {{ adapter.quote("specialofferid") }} as special_offer_id,
         {{ adapter.quote("decimal_unit_price") }} as unit_price,
         {{ adapter.quote("decimal_unit_price_discount") }} as unit_price_percent_discount,
-        CAST( decimal_unit_price * ( 1.0 - decimal_unit_price_discount ) * orderqty as DECIMAL(20, 3) ) as line_total,
+        CAST( decimal_unit_price * ( 1.0 - decimal_unit_price_discount ) * orderqty as DECIMAL(20, 4) ) as line_total,
         {{ adapter.quote("rowguid") }} as row_guid,
         {{ adapter.quote("modifieddate") }} as modified_date
 
