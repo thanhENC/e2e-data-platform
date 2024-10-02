@@ -21,6 +21,7 @@ adw14/data
 
 # nginx
 docker/nginx/conf.d/default.conf
+docker/nginx/conf.d/default.conf.template
 docker/nginx/ssl/*
 !docker/nginx/ssl/.gitkeep
 
