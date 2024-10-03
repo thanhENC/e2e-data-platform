@@ -3,7 +3,6 @@ docker/minio/credential_accesskey.json
 __pycache__/
 logs/
 jaffle-data/
-docker/volumes/
 .vscode/
 .venv
 data/
@@ -33,3 +32,9 @@ docker/trino/catalog/*
 docker/backup/*
 !docker/backup/README.md
 !docker/backup/.gitkeep
+
+# volumes
+docker/volumes/*
+!docker/volumes/.gitkeep
+!docker/volumes/certbot/www/.gitkeep
+!docker/volumes/dbt/.gitkeep
