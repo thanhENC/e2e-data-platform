@@ -1,5 +1,7 @@
 # Please do not directly edit this file. Instead, modify the .env variables related to NGINX configuration.
 
+# By default, trino is placed behind NGINX_SERVER_NAME. If you want to change this, please modify the .env file.
+
 server {
     listen ${NGINX_PORT};
     server_name ${NGINX_SERVER_NAME};
@@ -15,3 +17,96 @@ server {
     # placeholder for https config defined in https.conf.template
     ${HTTPS_CONFIG}
 }
+
+# ==================================================
+# Uncomment the following block if you want to enable HTTPS for Lightdash
+# ==================================================
+# server {
+#     server_name lightdash.real-domain.name;
+
+#     location / {
+#       proxy_pass http://lightdash:8080;
+#       include proxy.conf;
+#     }
+
+#     # placeholder for acme challenge location
+#     location /.well-known/acme-challenge/ { root /var/www/html; }
+
+#     # placeholder for https config
+#     listen 443 ssl;
+#     ssl_certificate /etc/letsencrypt/live/lightdash.real-domain.name/fullchain.pem;
+#     ssl_certificate_key /etc/letsencrypt/live/lightdash.real-domain.name/privkey.pem;
+#     ssl_protocols TLSv1.1 TLSv1.2 TLSv1.3;
+#     ssl_prefer_server_ciphers on;
+#     ssl_session_cache shared:SSL:10m;
+#     ssl_session_timeout 10m;
+# }
+
+# ==================================================
+# Uncomment the following block if you want to enable HTTPS for Headless Browser
+# ==================================================
+# server {
+#     server_name headless-browser.real-domain.name;
+
+#     location / {
+#       proxy_pass http://headless-browser:3000;
+#       include proxy.conf;
+#     }
+
+#     # placeholder for acme challenge location
+#     location /.well-known/acme-challenge/ { root /var/www/html; }
+
+#     # placeholder for https config
+#     listen 443 ssl;
+#     ssl_certificate /etc/letsencrypt/live/headless-browser.real-domain.name/fullchain.pem;
+#     ssl_certificate_key /etc/letsencrypt/live/headless-browser.real-domain.name/privkey.pem;
+#     ssl_protocols TLSv1.1 TLSv1.2 TLSv1.3;
+#     ssl_prefer_server_ciphers on;
+#     ssl_session_cache shared:SSL:10m;
+#     ssl_session_timeout 10m;
+# }
+
+# ==================================================
+# Uncomment the following block if you want to enable HTTPS for DBT Docs
+# ==================================================
+
+# server {
+#     server_name dbt.real-domain.name;
+
+#     location / {
+#       root /var/www/dbt;
+#     }
+
+#     # placeholder for https config
+#     listen 443 ssl;
+#     ssl_certificate /etc/letsencrypt/live/dbt.real-domain.name/fullchain.pem;
+#     ssl_certificate_key /etc/letsencrypt/live/dbt.real-domain.name/privkey.pem;
+#     ssl_protocols TLSv1.1 TLSv1.2 TLSv1.3;
+#     ssl_prefer_server_ciphers on;
+#     ssl_session_cache shared:SSL:10m;
+#     ssl_session_timeout 10m;
+# }
+
+# ==================================================
+# Uncomment the following block if you want to enable HTTPS for Spark UI
+# ==================================================
+# server {
+#     server_name spark.real-domain.name;
+
+#     location / {
+#       proxy_pass http://spark-master:8080;
+#       include proxy.conf;
+#     }
+
+#     # placeholder for acme challenge location
+#     location /.well-known/acme-challenge/ { root /var/www/html; }
+
+#     # placeholder for https config
+#     listen 443 ssl;
+#     ssl_certificate /etc/letsencrypt/live/spark.real-domain.name/fullchain.pem;
+#     ssl_certificate_key /etc/letsencrypt/live/spark.real-domain.name/privkey.pem;
+#     ssl_protocols TLSv1.1 TLSv1.2 TLSv1.3;
+#     ssl_prefer_server_ciphers on;
+#     ssl_session_cache shared:SSL:10m;
+#     ssl_session_timeout 10m;
+# }

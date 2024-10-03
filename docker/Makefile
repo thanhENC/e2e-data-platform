@@ -47,6 +47,14 @@ compose-up-certbot: create-network
 	@docker compose --env-file .env --profile certbot up -d
 	@docker ps
 
+# get certbot certificate
+# -----------------------------------------------------------------------------
+DOMAIN=domain.name
+EMAIL=email@domain.name
+.PHONY: get-cert
+get-cert:
+	@docker exec -it certbot certbot certonly --noninteractive --webroot --webroot-path=/var/www/html --email $(EMAIL) --agree-tos --no-eff-email -d $(DOMAIN) --force-renewal
+
 # compose up with 1 trino workers
 # -----------------------------------------------------------------------------
 .PHONY: compose-up-trino
@@ -130,6 +138,7 @@ help:
 	@echo "  compose-up-certbot		Compose up with certbot"
 	@echo "  compose-up-trino  		Compose up with 1 trino workers"
 	@echo "  compose-down      		Compose down all services then remove network"
+	@echo "  get-cert          		Get certbot certificate"
 	@echo "  spark-submit      		Spark master submit"
 	@echo "  backup            		Backup OLTP, Minio and Hive metastore data"
 	@echo "  init-db           		Initialize adventureworks database"

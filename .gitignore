@@ -3,7 +3,6 @@ docker/minio/credential_accesskey.json
 __pycache__/
 logs/
 jaffle-data/
-docker/volumes/
 .vscode/
 .venv
 data/
@@ -21,6 +20,7 @@ adw14/data
 
 # nginx
 docker/nginx/conf.d/default.conf
+docker/nginx/conf.d/default.conf.template
 docker/nginx/ssl/*
 !docker/nginx/ssl/.gitkeep
 
@@ -32,3 +32,9 @@ docker/trino/catalog/*
 docker/backup/*
 !docker/backup/README.md
 !docker/backup/.gitkeep
+
+# volumes
+docker/volumes/*
+!docker/volumes/.gitkeep
+!docker/volumes/certbot/www/.gitkeep
+!docker/volumes/dbt/.gitkeep
