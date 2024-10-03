@@ -67,6 +67,27 @@ server {
 # }
 
 # ==================================================
+# Uncomment the following block if you want to enable HTTPS for DBT Docs
+# ==================================================
+
+# server {
+#     server_name dbt.real-domain.name;
+
+#     location / {
+#       root /var/www/dbt;
+#     }
+
+#     # placeholder for https config
+#     listen 443 ssl;
+#     ssl_certificate /etc/letsencrypt/live/dbt.real-domain.name/fullchain.pem;
+#     ssl_certificate_key /etc/letsencrypt/live/dbt.real-domain.name/privkey.pem;
+#     ssl_protocols TLSv1.1 TLSv1.2 TLSv1.3;
+#     ssl_prefer_server_ciphers on;
+#     ssl_session_cache shared:SSL:10m;
+#     ssl_session_timeout 10m;
+# }
+
+# ==================================================
 # Uncomment the following block if you want to enable HTTPS for Spark UI
 # ==================================================
 # server {
