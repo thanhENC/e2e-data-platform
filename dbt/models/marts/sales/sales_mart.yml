@@ -45,7 +45,7 @@ models:
       - name: color
         description: "Color of the product"
       - name: color_category
-        description: "Category of the product color"
+        description: '{{ doc("product_color_category") }}'
       - name: standard_cost
         description: "Standard cost of the product"
       - name: list_price
@@ -285,7 +285,7 @@ models:
                 groups: ['finance']
       # ========== total_due ==========
       - name: total_due
-        description: "Total amount due for the order"
+        description: '{{ doc("total_due") }}'
         meta:
             dimension:
                 type: number
