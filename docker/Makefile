@@ -53,7 +53,7 @@ DOMAIN=domain.name
 EMAIL=email@domain.name
 .PHONY: get-cert
 get-cert:
-	@docker exec -it certbot certbot certonly --noninteractive --webroot --webroot-path=/var/www/html --email $(EMAIL) --agree-tos --no-eff-email -d $(DOMAIN)
+	@docker exec -it certbot certbot certonly --noninteractive --webroot --webroot-path=/var/www/html --email $(EMAIL) --agree-tos --no-eff-email -d $(DOMAIN) --force-renewal
 
 # compose up with 1 trino workers
 # -----------------------------------------------------------------------------
