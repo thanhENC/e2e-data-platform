@@ -365,7 +365,8 @@ services:
     # entrypoint: >
     #   sh -c "dbt docs generate --no-compile"
     volumes:
-      - ./volumes/dbt:/usr/target
+      - ../dbt:/usr/src/dbt # dbt project source code directory
+      - ./volumes/dbt:/usr/dbt/target
     depends_on:
       trino:
         condition: service_healthy
