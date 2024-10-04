@@ -1,6 +1,6 @@
 '''
 Extract Load OLTP Data from schema Prodcution
-To Bronze Layer in S3 s3a://delta/bronze/postgres/prodcution
+To Bronze Layer in S3 s3a://delta/bronze/postgres/production
 '''
 
 from airflow import DAG
@@ -60,7 +60,8 @@ with DAG(
     f'spark-el-oltp-{source_schema["schema"]}',
     default_args=default_args,
     schedule_interval='20 17 * * *',
-    catchup=False
+    catchup=False,
+    tags=['egn:spark', 'src:oltp', 'sche:production']
 ) as dag:
 
     # Create a Task Group

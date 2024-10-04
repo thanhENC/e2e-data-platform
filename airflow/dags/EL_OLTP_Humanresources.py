@@ -41,7 +41,8 @@ with DAG(
     f'spark-el-oltp-{source_schema["schema"]}',
     default_args=default_args,
     schedule_interval='40 16 * * *',
-    catchup=False
+    catchup=False,
+    tags=['egn:spark', 'src:oltp', 'sche:humanresources']
 ) as dag:
 
     # Create a Task Group
