@@ -38,3 +38,6 @@ docker/volumes/*
 !docker/volumes/.gitkeep
 !docker/volumes/certbot/www/.gitkeep
 !docker/volumes/dbt/.gitkeep
+
+# airflow
+airflow/config/keyfile/*
