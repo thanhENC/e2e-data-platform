@@ -4,13 +4,18 @@
 
 <p align="center">
     <a href="https://github.com/thanhENC/e2e-data-platform" target="_blank">
-        <img alt="Static Badge" src="https://img.shields.io/badge/Github-121212"
+        <img alt="Static Badge" src="https://img.shields.io/badge/Github Repo-474747?logo=github"
     </a>
     <a href="https://linkedin.com/in/van-an-dinh" target="_blank">
-        <img alt="Static Badge" src="https://img.shields.io/badge/Linkedin-155EEF">
+        <img alt="Static Badge" src="https://img.shields.io/badge/Linkedin Post-0A66C2?logo=linkedin">
     </a>
     <a href="https://medium.com" target="_blank">
-        <img src="https://img.shields.io/badge/Medium-FFFFFF"
+        <img src="https://img.shields.io/badge/Medium article-474747?logo=medium"
+            alt="chat on Discord">
+    </a>
+    <a href="https://www.youtube.com/@thanhenc?sub_confirmation=1
+    " target="_blank">
+        <img src="https://img.shields.io/youtube/channel/views/UCFnCLybLtgDWKzJjpSmh1jw"
             alt="chat on Discord">
     </a>
 </p>
@@ -28,13 +33,13 @@ Project overview: ... (updating)
       <p>I’m always excited to connect with like-minded individuals and professionals in the data community. Feel free to reach out or follow my work on the following platforms:</p>
       <p>
         <a href="https://github.com/thanhENC" target="_blank">
-          <img src="https://img.icons8.com/ios-glyphs/30/github.png" alt="GitHub" style="margin-right:10px" />
+          <img src="https://img.shields.io/badge/@thanhENC-474747?logo=github" alt="GitHub" style="margin-right:10px" />
         </a>
         <a href="https://linkedin.com/in/van-an-dinh" target="_blank">
-          <img src="https://img.icons8.com/ios-glyphs/30/linkedin.png" alt="LinkedIn" style="margin-right:10px" />
+          <img src="https://img.shields.io/badge/@vanandinh-0A66C2?logo=linkedin" alt="LinkedIn" style="margin-right:10px" />
         </a>
-        <a href="https://youtube.com/@thanhenc" target="_blank">
-          <img src="https://img.icons8.com/ios-glyphs/30/youtube-play.png" alt="YouTube" />
+        <a href="https://www.youtube.com/@thanhenc?sub_confirmation=1" target="_blank">
+          <img src="https://img.shields.io/badge/@thanhenc-FF0000?logo=youtube" alt="YouTube" />
         </a>
       </p>
     </td>
@@ -51,14 +56,19 @@ Project overview. Here's a list of the core features:
 **1. Feature 1**:
 Feature 1 description.
 
+<img src="assets/images/airflow-overview.png" alt="airflow-overview" style="border-radius: 10px;">
+</br> </br>
+
 **2. Feature 2**:
 Feature 2 description.
 
 ![dataflow](assets/images/dataflow.svg)
 
-<img src="assets/images/docker-map.svg" alt="docker-map" style="border-radius: 10px;">
-
 ## Services distribution
+
+<img src="assets/images/airflow-job-detail.png" alt="airflow-job-detail" style="border-radius: 10px;">
+
+<img src="assets/images/docker-map.svg" alt="docker-map" style="border-radius: 10px;">
 
 <table style="width: 100%;">
   <tr>
@@ -70,52 +80,59 @@ Feature 2 description.
   </tr>
   <tr>
     <td align="center">Airflow</td>
-    <td align="center">...</td>
+    <td align="center"><a href="airflow/README.md"><img alt="Airflow README" src="https://img.shields.io/badge/README-474747?logo=apache-airflow"></a></td>
     <td align="center">✅</td>
-    <td align="center">✅</td>
-    <td align="center">✅</td>
+    <td align="center">❌</td>
+    <td align="center">❌</td>
   </tr>
   <tr>
     <td align="center">Spark</td>
-    <td align="center">...</td>
-    <td align="center">✅</td>
+    <td align="center"><a href="docker/spark/README.md"><img alt="Spark README" src="https://img.shields.io/badge/README-474747?logo=apache-spark"></a></td>
     <td align="center">❌</td>
     <td align="center">✅</td>
+    <td align="center">❌</td>
   </tr>
   <tr>
     <td align="center">Trino</td>
-    <td align="center">...</td>
-    <td align="center">❌</td>
-    <td align="center">✅</td>
-    <td align="center">❌</td>
-  </tr>
-  <tr>
-    <td align="center">Minio</td>
-    <td align="center">...</td>
-    <td align="center">✅</td>
+    <td align="center"><a href="docker/trino/README.md"><img alt="Trino README" src="https://img.shields.io/badge/README-474747?logo=trino"></a></td>
     <td align="center">❌</td>
     <td align="center">❌</td>
+    <td align="center">✅</br>(required)</td>
   </tr>
   <tr>
     <td align="center">Lightdash</td>
-    <td align="center">...</td>
+    <td align="center"><a href="docker/lightdash/README.md"><img alt="Lightdash README" src="https://img.shields.io/badge/⚡ README-474747?logo=lightdash"></a></td>
+    <td align="center">❌</td>
     <td align="center">❌</td>
     <td align="center">✅</td>
-    <td align="center">❌</td>
   </tr>
   <tr>
     <td align="center">DBT</td>
-    <td align="center">...</td>
-    <td align="center">✅</td>
-    <td align="center">✅</td>
+    <td align="center"><a href="dbt/README.md"><img alt="DBT README" src="https://img.shields.io/badge/README-474747?logo=dbt"></a></td>
     <td align="center">❌</td>
+    <td align="center">❌</td>
+    <td align="center">✅</td>
   </tr>
   <tr>
     <td align="center">Minio</td>
-    <td align="center">...</td>
+    <td align="center"><a href="docker/minio/README.md"><img alt="Minio README" src="https://img.shields.io/badge/README-474747?logo=minio"></a></td>
+    <td align="center">❌</td>
     <td align="center">❌</td>
     <td align="center">✅</td>
-    <td align="center">❌</td>
+  </tr>
+  <tr>
+    <td align="center">Nginx</td>
+    <td align="center"><a href="docker/nginx/README.md"><img alt="Nginx README" src="https://img.shields.io/badge/README-474747?logo=nginx"></a></td>
+    <td align="center">✅</td>
+    <td align="center">✅</td>
+    <td align="center">✅</br>(required)</td>
+  </tr>
+  <tr>
+    <td align="center">Certbot</td>
+    <td align="center"><a href="docker/certbot/README.md"><img alt="Certbot README" src="https://img.shields.io/badge/README-474747?logo=letsencrypt"></a></td>
+    <td align="center">✅</td>
+    <td align="center">✅</td>
+    <td align="center">✅</td>
   </tr>
 </table>
 
@@ -125,6 +142,7 @@ Feature 2 description.
 
 - **Cloud </br>**
   
+<img src="assets/images/trino-cluster-overview.png" alt="trino-cluster-overview" style="border-radius: 10px;">
 
 - **Self-hosting Lightdash </br>**
   
