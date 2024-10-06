@@ -146,6 +146,9 @@ Feature 2 description.
 
 - **Self-hosting Lightdash </br>**
   
+<img src="assets/pdf/spark-master-jobs-history.pdf" alt="docker-map" style="border-radius: 10px;">
+
+<iframe width="100%" height="800" src="assets/pdf/spark-master-jobs-history.pdf"></iframe>
 
 ## Staying ahead
 
