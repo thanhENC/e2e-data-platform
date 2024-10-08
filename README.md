@@ -4,10 +4,10 @@
     <a href="https://github.com/thanhENC/e2e-data-platform" target="_blank">
         <img alt="github-repo" src="https://img.shields.io/badge/Github Repo-474747?logo=github"
     </a>
-    <a href="https://linkedin.com/in/van-an-dinh" target="_blank">
+    <a href="https://www.linkedin.com/posts/van-an-dinh_dataplatform-apacheairflow-apachespark-activity-7249410360242290689-47yT?utm_source=share" target="_blank">
         <img alt="linkedin-post" src="https://img.shields.io/badge/Linkedin Post-0A66C2?logo=linkedin">
     </a>
-    <a href="https://medium.com" target="_blank">
+    <a href="https://medium.com/@thanhenc/poc-data-platform-project-utilizing-modern-data-stack-airflow-spark-dbt-trino-hive-metastore-dea3e012b89c" target="_blank">
         <img alt="medium-article" src="https://img.shields.io/badge/Medium article-474747?logo=medium">
     </a>
     <a href="https://www.youtube.com/@thanhenc?sub_confirmation=1
